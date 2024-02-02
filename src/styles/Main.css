@@ -1,13 +1,349 @@
 
 /*=================================LOGIN===================================*/
-
-/*=================================LOGIN===================================*/
-
-/*===================================tablas=====================================*/
-
-.esp{
-  padding: 20%;
+.login-dark {
+  height:600px;
+  background:#ffffff;
+  background-size:cover;
+  position:relative;
 }
 
+.login-dark form {
+  max-width:320px;
+  width:90%;
+  background-color:#1e2833;
+  padding:40px;
+  border-radius:4px;
+  transform:translate(-50%, -50%);
+  position:absolute;
+  top:50%;
+  left:50%;
+  color:#fff;
+  box-shadow:3px 3px 4px rgba(0,0,0,0.2);
+}
+
+.login-dark .illustration {
+  text-align:center;
+  padding:15px 0 20px;
+  font-size:100px;
+  color:#2980ef;
+}
+
+.login-dark form .form-control {
+  background:none;
+  border:none;
+  border-bottom:1px solid #434a52;
+  border-radius:0;
+  box-shadow:none;
+  outline:none;
+  color:inherit;
+}
+
+.login-dark form .btn-primary {
+  background:#214a80;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top:26px;
+  text-shadow:none;
+  outline:none;
+}
+
+.login-dark form .btn-primary:hover, .login-dark form .btn-primary:active {
+  background:#214a80;
+  outline:none;
+}
+
+.login-dark form .forgot {
+  display:block;
+  text-align:center;
+  font-size:12px;
+  color:#6f7a85;
+  opacity:0.9;
+  text-decoration:none;
+}
+
+.login-dark form .forgot:hover, .login-dark form .forgot:active {
+  opacity:1;
+  text-decoration:none;
+}
+
+.login-dark form .btn-primary:active {
+  transform:translateY(1px);
+}
+
+
+/*=================================LOGIN===================================*/
+/*=================================Form Register===================================*/
+
+
+.Register-dark form {
+  margin-top: 100px;
+  max-width:600px;
+  width:90%;
+  background-color:#1e2833;
+  padding:40px;
+  border-radius:4px;
+  transform:translate(-50%, -50%);
+  position:absolute;
+  top:50%;
+  left:50%;
+  color:#fff;
+  box-shadow:3px 3px 4px rgba(0,0,0,0.2);
+}
+
+.Register-dark .illustration {
+  text-align:center;
+  padding:15px 0 20px;
+  font-size:100px;
+  color:#2980ef;
+}
+
+.Register-dark form .form-control {
+  background:none;
+  border:none;
+  border-bottom:1px solid #434a52;
+  border-radius:0;
+  box-shadow:none;
+  outline:none;
+  color:inherit;
+}
+
+.Register-dark form .btn-primary {
+  background:#214a80;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top:26px;
+  text-shadow:none;
+  outline:none;
+}
+.Register-dark form .btn-danger{
+  background:#9f0606;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top:26px;
+  text-shadow:none;
+  outline:none;
+}
+
+.Register-dark form .btn-primary:hover, .login-dark form .btn-primary:active {
+  background:#214a80;
+  outline:none;
+}
+
+.Register-dark form .forgot {
+  display:block;
+  text-align:center;
+  font-size:12px;
+  color:#6f7a85;
+  opacity:0.9;
+  text-decoration:none;
+}
+
+.Register-dark form .forgot:hover, .login-dark form .forgot:active {
+  opacity:1;
+  text-decoration:none;
+}
+
+.Register-dark form .btn-primary:active {
+  transform:translateY(1px);
+}
+
+/*=================================Form Register===================================*/
+
+/*=================================Form Activos===================================*/
+
+.Activos-dark form {
+  background-color:#1e2833;
+  padding:40px;
+  border-radius:4px;
+  transform: translate(0px, 0px);
+  margin-top: 80px;
+  margin-bottom: 80px;
+  color:#fff;
+  box-shadow:3px 3px 4px rgba(0,0,0,0.2);
+}
+
+
+.Activos-dark form .form-control {
+  background:none;
+  border:none;
+  border-bottom:1px solid #434a52;
+  border-radius:0;
+  box-shadow:none;
+  outline:none;
+  color:inherit;
+}
+
+.Activos-dark form .btn-primary {
+  background:#214a80;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top:26px;
+  text-shadow:none;
+  outline:none;
+}
+.Activos-dark form .btn-danger{
+  background:#9f0606;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top:26px;
+  text-shadow:none;
+  outline:none;
+}
+
+.Activos-dark form .btn-primary:hover, .login-dark form .btn-primary:active {
+  background:#214a80;
+  outline:none;
+}
+
+.Activos-dark form .forgot {
+  display:block;
+  text-align:center;
+  font-size:12px;
+  color:#6f7a85;
+  opacity:0.9;
+  text-decoration:none;
+}
+
+.Activos-dark form .forgot:hover, .login-dark form .forgot:active {
+  opacity:1;
+  text-decoration:none;
+}
+
+.Activos-dark form .btn-primary:active {
+  transform:translateY(1px);
+}
+
+/*=================================Form Activos===================================*/
+
 /*===================================tablas=====================================*/
+.stable{
+  margin-top: 10px;
+  
+}
+td .btn-primary {
+  background:#214a80;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  
+  text-shadow:none;
+  outline:none;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+td .btn-danger{
+  background:#9f0606;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+ 
+  text-shadow:none;
+  outline:none;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+ 
+
+/*===================================tablas=====================================*/
+/*===============================================================================*/
+div .btn-success {
+  background:#218031;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-shadow:none;
+  outline:none;
+  width: 100%;
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+div .btn-primary {
+  background:#3c2180;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-shadow:none;
+  outline:none;
+  width: 100%;
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+div .btn-danger{
+  background:#802121;
+  border:none;
+  border-radius:4px;
+  padding:11px;
+  box-shadow:none;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-shadow:none;
+  outline:none;
+  width: 100%;
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.styles form{
+  background-color: #1e2833;
+  color: #ffffff;
+  font-size: larger;
+  font-weight: 200;
+}
+.styles form .form-control{
+  background-color: #1e2833;
+  color: #ffffff; /* Color de texto en blanco */
+  font-size: larger;
+  font-weight: 200;
+}
+.styles form .form.Control{
+  background-color: #1e2833;
+  color: #ffffff; /* Color de texto en blanco */
+  font-size: larger;
+  font-weight: 200;
+}
+.styles form .form.Control {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #434a52;
+  border-radius: 0;
+  box-shadow: none;
+  outline: none;
+  color: inherit;
+}
+
+.styles{
+  background-color: #1e2833;
+}
+/*===============================================================================*/
+
+/*===================================Navbard=====================================*/
+
+
+/*===================================Navbard=====================================*/
 

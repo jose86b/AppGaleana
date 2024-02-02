@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import NavbarComp from './components/NavbarComp';
-import Login from './components/Login.js'
+import Navbard from './components/Navbard.js';
+import NavbarComp from './components/NavbarComp.js';
 
 
 
@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
 
-      <NavbarComp />
+      <Navbard />
      
     </div>
   );

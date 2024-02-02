@@ -41,14 +41,7 @@ export default function Login() {
                         </Button>
                       </div>
                     </Form>
-                    <div className="mt-3">
-                      <p className="mb-0  text-center">
-                      ¿No tienes una cuenta?{" "}
-                        <a href="{''}" className="text-primary fw-bold">
-                          Registrarse
-                        </a>
-                      </p>
-                    </div>
+                  
                   </div>
                 </div>
               </Card.Body>
