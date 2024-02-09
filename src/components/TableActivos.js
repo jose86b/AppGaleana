@@ -1,23 +1,31 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
+import React, { useState, useEffect } from 'react';
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBBtn,
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBTableCell,
+  MDBInput,
+  MDBModal,
+  MDBModalHeader,
+  MDBModalBody,
+  MDBModalFooter,
+  MDBSelect,
+  MDBModalTitle,
+} from 'mdb-react-ui-kit';
 import Axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import axios from 'axios';
-import Table from 'react-bootstrap/Table';
-import Modal from 'react-bootstrap/Modal';
-import '../styles/Main.css'
-
 
 function TableActivos() {
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [serie, setSerie] = useState('');
-  const [location, setLocation] = useState('');
-  const [condition_a 	, setCondition] = useState('');
+  const [email, setEmail] = useState('');
+  const [position, setPosition] = useState('');
+  const [password, setPassword] = useState('');
+  const [id_department, setId_department] = useState('');
   const [validated, setValidated] = useState(false);
-  const [activos, setAc] = useState([]);
+  const [users, setUs] = useState([]);
   const [id,setId]=useState();
   const [editar,setEditar]=useState(false);
 
@@ -30,244 +38,186 @@ function TableActivos() {
 
   const add = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:3001/createac', {
+    Axios.post('http://localhost:3001/create', {
       name: name,
-      description: description,
-      serie: serie,
-      location: location,
-      condition_a: condition_a,
+      email: email,
+      position: position,
+      password: password,
+      id_department: id_department
     }).then(() => {
-      alert('Activo Registrado');
+      alert('Usuario Registrado');
       handleCloseModalRegistro();
       limpiar();
+      
     });
   };
-  const editAc = (val)=>{
+  const editUs = (val)=>{
     setShowModalEditar(true);
     setEditar(true);
     setName(val.name);
-    setDescription(val.description)
-    setSerie(val.serie);
-    setLocation(val.location);
-    setCondition(val.condition_a);
+    setEmail(val.email)
+    setPosition(val.position);
+    setPassword(val.password);
     setId(val.id);
   }
-  const handleCloseModalEditar = () => setShowModalEditar(false)
+  const handleCloseModalEditar = () => {
+    setShowModalEditar(false);
+    limpiar();
+  }
+  
 
-
-  const getAc = () => {
-    Axios.get('http://localhost:3001/ac').then((response) => {
-      setAc(response.data);
+  const getUs = () => {
+    Axios.get('http://localhost:3001/us').then((response) => {
+      setUs(response.data);
     });
   };
 
  const handleDelete = (id) => {
   // Add confirmation alert
   if (window.confirm("¿Está seguro de eliminar este usuario?")) {
-    Axios.delete(`http://localhost:3001/delac/${id}`).then(() => {
-      const filteredTabla = activos.filter((user) => user.id !== id);
-      setAc(filteredTabla);
+    Axios.delete(`http://localhost:3001/delete/${id}`).then(() => {
+      const filteredTabla = users.filter((user) => user.id !== id);
+      setUs(filteredTabla);
     });
   }
 };
 
 
-  const handleSubmit = (e) =>{
-    e.preventDefault();
-    Axios.put('http://localhost:3001/upac', {
-      id:id, name:name, description:description, serie:serie, location:location, condition_a:condition_a
-    }).then((response) =>{
-      getAc();
-      alert(response.data);
-      handleCloseModalEditar(); // Close modal after success
-      limpiar();
-    })
-  }
-  const limpiar = () =>{
+const handleSubmit = (e) =>{
+  e.preventDefault();
+  Axios.put('http://localhost:3001/update', {
+    id:id, name:name, email:email, position:position, id_department:id_department,
+  }).then((response) =>{
+    getUs();
+    alert(response.data);
+    handleCloseModalEditar(); // Close modal after success
+    limpiar();
     
-    setEditar(false);
-    setName('');
-    setDescription('');
-    setSerie('');
-    setLocation('');
-    setCondition('');
-    setId('');
-  }
-
-
+  })
+}
+const limpiar = () =>{
+  
+  setEditar(false);
+  setName('');
+  setEmail('');
+  setPosition('');
+  setId('');
+}
+const [departments, setDepartamentos] = useState([])
+useEffect(() => {
+  Axios.get('http://localhost:3001/dep').then((response) => {
+    setDepartamentos(response.data);
+  });
+}, []);
 
   return (
     <div>
-      <div className="d-flex justify-content-around ">
-        <Button variant="success" type="submit" onClick={handleShowModalRegistro}>Registrar</Button>
-      </div>
-      <div className="d-flex justify-content-around ">
-        <Button variant="primary" onClick={getAc}>Obtener Usuarios</Button>
-      </div>
-      <Table className='table-dark stable'>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>N° Serie</th>
-            <th>Ubicacion</th>
-            <th>Condicion</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activos.map((val) => (
-            <tr key={val.id}>
-              <td>{val.id}</td>
-              <td>{val.name}</td>
-              <td>{val.description}</td>
-              <td>{val.serie}</td>
-              <td>{val.location}</td>
-              <td>{val.condition_a}</td>
-              <td>
-                <div className="d-flex justify-content-around">
-                <Button variant="danger" onClick={() => handleDelete(val.id)}>Eliminar</Button>
-                <Button variant="primary"onClick={()=>{editAc(val)}}>Editar</Button>
-                </div>
-              </td>
+      <MDBContainer>
+        <MDBRow className="d-flex justify-content-around">
+          <MDBBtn color="success" onClick={handleShowModalRegistro}>
+            Registrar
+          </MDBBtn>
+          <MDBBtn color="primary" onClick={getUs}>
+            Obtener Usuarios
+          </MDBBtn>
+        </MDBRow>
+
+        <MDBTable striped>
+        <MDBTableHead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Cargo</th>
+              <th>Departamento</th>
+              <th>Acciones</th>
             </tr>
-          ) )}
-        </tbody>
-      </Table>
-      <Modal show={showModalRegistro} onHide={handleCloseModalRegistro} >
-        <Modal.Header closeButton className='styles'>
-          <Modal.Title className='fw-bold mb-2 text-uppercase text-center'>Registro de nuevo usuario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body >
-          <Form noValidate validated={validated} onSubmit={add}>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                
-                required
-                type="text"
-                placeholder="Nombre completo"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput" >
-              <Form.Label>Descripción</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Descripción"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>N° Serie</Form.Label>
-              <Form.Control
-                required
-                type="tesxt"
-                placeholder="N° Serie"
-                value={serie}
-                onChange={(e) => setSerie(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Ubicacion</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Ubicacion"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Condicion</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Condicion"
-                value={location}
-                onChange={(e) => setCondition(e.target.value)}
-              />
-            </Form.Group>
-            <div className="d-flex justify-content-between w-100">
-            <Button variant="danger" onClick={handleCloseModalRegistro}>Cancelar</Button>
-            <Button variant="primary" type="submit">Guardar</Button>
-          </div>
-          </Form>
-        
-        </Modal.Body>
-      </Modal>
-      /*========================================================== */
-      <Modal show={showModalEditar} onHide={handleCloseModalEditar}>
-        <Modal.Header closeButton>
-          <Modal.Title className='fw-bold mb-2 text-uppercase text-center'>Editar Usuario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Nombre"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Descripción</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Descripción"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>N° Serie</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="N° Serie"
-                value={serie}
-                onChange={(e) => setSerie(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Ubicacion</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Ubicacion"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Condicion</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Condicion"
-                value={condition_a}
-                onChange={(e) => setCondition(e.target.value)}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="d-flex justify-content-between w-100">
-            <Button variant="danger" onClick={handleCloseModalEditar}>Cancelar</Button>
-          </div>
-          <div className="d-flex justify-content-between w-100">
-            <Button variant="primary" type="submit" onClick={handleSubmit}>Guardar</Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+          </MDBTableHead>
+          <MDBTableBody>
+            {users.map((val) => (
+              <tr key={val.id}>
+                <td>{val.id}</td>
+                <td>{val.name}</td>
+                <td>{val.email}</td>
+                <td>{val.position}</td>
+                <td>{departments.find((dep) => dep.id === val.id_department)?.name}</td>
+                <td>
+                  <div className="d-flex justify-content-around">
+                    <MDBBtn variant="danger" onClick={() => handleDelete(val.id)}>
+                      Eliminar
+                    </MDBBtn>
+                    <MDBBtn variant="primary" onClick={() => editUs(val)}>
+                      Editar
+                    </MDBBtn>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </MDBTableBody>
+        </MDBTable>
+
+        {/* Modal for registration */}
+        <MDBModal isOpen={showModalRegistro} toggle={handleCloseModalRegistro}>
+          <MDBModalHeader toggle={handleCloseModalRegistro}>
+            <MDBModalTitle className="fw-bold mb-2 text-uppercase text-center">
+              Registro de nuevo usuario
+            </MDBModalTitle>
+          </MDBModalHeader>
+          <MDBModalBody>
+            <MDBInput label="Nombre" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <MDBInput label="Cargo" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
+            <MDBInput label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <MDBInput label="Confirmar contraseña" type="password" required />
+            <select label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
+              <option value="" disabled>Selecciona un departamento</option>
+              {departments.map((dep) => (
+                <option key={dep.id} value={dep.id}>
+                  {dep.name}
+                </option>
+              ))}
+            </select>
+          </MDBModalBody>
+          <MDBModalFooter>
+            <MDBBtn variant="danger" onClick={handleCloseModalRegistro}>
+              Cancelar
+            </MDBBtn>
+            <MDBBtn variant="primary" onClick={add}>
+              Guardar
+            </MDBBtn>
+          </MDBModalFooter>
+        </MDBModal>
+
+        {/* Modal for editing */}
+        <MDBModal isOpen={showModalEditar} toggle={handleCloseModalEditar}>
+          <MDBModalHeader toggle={handleCloseModalEditar}>
+            <MDBModalTitle className="fw-bold mb-2 text-uppercase text-center">
+              Editar usuario
+            </MDBModalTitle>
+          </MDBModalHeader>
+          <MDBModalBody>
+            <MDBInput label="Nombre Completo" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <MDBInput label="Cargo" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
+            <select label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
+              <option value="" disabled>Selecciona un departamento</option>
+              {departments.map((dep) => (
+                <option key={dep.id} value={dep.id}>
+                  {dep.name}
+                </option>
+              ))}
+            </select>
+          </MDBModalBody>
+          <MDBModalFooter>
+            <MDBBtn variant="danger" onClick={handleCloseModalEditar}>
+              Cancelar
+            </MDBBtn>
+            <MDBBtn variant="primary" type="submit" onClick={handleSubmit}>
+              Guardar
+            </MDBBtn>
+          </MDBModalFooter>
+        </MDBModal>
+      </MDBContainer>
     </div>
   );
 }

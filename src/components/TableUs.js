@@ -1,14 +1,25 @@
-import { useState, useEffect} from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
+import React, { useState, useEffect } from 'react';
+import {
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBBtn,
+  MDBTable,
+  MDBTableHead,
+  MDBTableBody,
+  MDBTableCell,
+  MDBInput,
+  MDBModal,
+  MDBModalHeader,
+  MDBModalBody,
+  MDBModalFooter,
+  MDBSelect,
+  MDBModalTitle,
+  MDBModalDialog,
+  MDBModalContent,
+} from 'mdb-react-ui-kit';
 import Axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import axios from 'axios';
-import Table from 'react-bootstrap/Table';
-import Modal from 'react-bootstrap/Modal';
 import '../styles/Main.css'
-
 
 function TableUs() {
   const [name, setName] = useState('');
@@ -19,13 +30,17 @@ function TableUs() {
   const [validated, setValidated] = useState(false);
   const [users, setUs] = useState([]);
   const [id,setId]=useState();
-  const [editar,setEditar]=useState(false);
+  
 
   const [showModalRegistro, setShowModalRegistro] = useState(false);
   const [showModalEditar, setShowModalEditar] = useState(false);
 
   const handleShowModalRegistro = () => setShowModalRegistro(true);
   const handleCloseModalRegistro = () => setShowModalRegistro(false)
+
+  const [basicModal, setBasicModal] = useState(false);
+
+  const toggleOpen = () => setBasicModal(!basicModal);
 
 
   const add = (e) => {
@@ -43,17 +58,26 @@ function TableUs() {
       
     });
   };
-  const editUs = (val)=>{
-    setShowModalEditar(true);
-    setEditar(true);
+  const handleShowModalEditar = (val) => {
+    
     setName(val.name);
-    setEmail(val.email)
+    setEmail(val.email);
     setPosition(val.position);
     setPassword(val.password);
     setId(val.id);
-  }
-  const handleCloseModalEditar = () => setShowModalEditar(false)
+    setShowModalEditar(true);
+  };
+  const handleCloseModals = () => {
+    setShowModalRegistro(false);
+    setShowModalEditar(false);
+    limpiar();
+  };
 
+  const handleCloseModalEditar = () => {
+    setShowModalEditar(false);
+    limpiar();
+  }
+  
 
   const getUs = () => {
     Axios.get('http://localhost:3001/us').then((response) => {
@@ -85,8 +109,8 @@ const handleSubmit = (e) =>{
   })
 }
 const limpiar = () =>{
-  
-  setEditar(false);
+  setId_department('');
+  setPassword('');
   setName('');
   setEmail('');
   setPosition('');
@@ -99,179 +123,131 @@ useEffect(() => {
   });
 }, []);
 
-
   return (
     <div>
-      <div className="d-flex justify-content-around ">
-        <Button variant="success" type="submit" onClick={handleShowModalRegistro}>Registrar</Button>
-      </div>
-      <div className="d-flex justify-content-around ">
-        <Button variant="primary" onClick={getUs}>Obtener Usuarios</Button>
-      </div>
-      <Table className='table-dark stable'>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Cargo</th>
-            <th>Puesto</th>
-            <th>Level 1</th>
-            <th>level 2</th>
-            <th>level 3</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((val) => (
-            <tr key={val.id}>
-              <td>{val.id}</td>
-              <td>{val.name}</td>
-              <td>{val.email}</td>
-              <td>{val.position}</td>
-              <td>{val.id_department}</td>
-              <td><Form.Check id={`default-${"type"}`}label={`Rango `}/></td>
-              <td><Form.Check id={`default-${"type"}`}label={`Rango `}/></td>
-              <td><Form.Check id={`default-${"type"}`}label={`Rango `}/></td>
-              <td>
-                <div className="d-flex justify-content-around">
-                <Button variant="danger" onClick={() => handleDelete(val.id)}>Eliminar</Button>
-                <Button variant="primary"onClick={()=>{editUs(val)}}>Editar</Button>
-                </div>
-              </td>
+      <MDBContainer>
+        <div className="d-grid gap-2 col-6 mx-auto"> 
+          <p></p>
+          <MDBBtn color="success" onClick={handleShowModalRegistro}>Registrar</MDBBtn>
+          <p></p>
+          <MDBBtn color="primary" onClick={getUs}>Obtener Usuarios</MDBBtn>
+          <p></p>
+        </div>
+
+        <MDBTable striped>
+        <MDBTableHead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Cargo</th>
+              <th>Departamento</th>
+              <th>Acciones</th>
             </tr>
-          ) )}
-        </tbody>
-      </Table>
-      <Modal show={showModalRegistro} onHide={handleCloseModalRegistro}>
-        <Modal.Header closeButton={handleCloseModalRegistro}>
-          <Modal.Title className='fw-bold mb-2 text-uppercase text-center'>Registro de nuevo usuario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form noValidate validated={validated} onSubmit={add}>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Nombre completo"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Correo</Form.Label>
-              <Form.Control
-                required
-                type="email"
-                placeholder="Correo"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Cargo</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Cargo"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Confirmar contraseña</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Confirmar contraseña"
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Departamento:</Form.Label>
-              <Form.Select value={id_department} onChange={(e) => setId_department(e.target.value)}>
+          </MDBTableHead>
+          <MDBTableBody>
+            {users.map((val) => (
+              <tr key={val.id}>
+                <td>{val.id}</td>
+                <td>{val.name}</td>
+                <td>{val.email}</td>
+                <td>{val.position}</td>
+                <td>{departments.find((dep) => dep.id === val.id_department)?.name}</td>
+                <td>
+                  <div className="d-flex justify-content-around">
+                    <MDBBtn onClick={() => handleShowModalEditar(val)}>Editar</MDBBtn>
+                    <MDBBtn color='danger' onClick={() => handleDelete(val.id)}>Eliminar </MDBBtn>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </MDBTableBody>
+        </MDBTable>
+
+        {/* Modal for registration */}
+        <MDBModal open={showModalRegistro} setOpen={setShowModalRegistro}tabIndex='-1'>
+        <MDBModalDialog>
+          <MDBModalContent>
+          <MDBModalHeader toggle={handleCloseModals}>
+            <MDBModalTitle>Registro de nuevo usuario</MDBModalTitle>
+            <MDBBtn className='btn-close' color='none' onClick={handleCloseModals}></MDBBtn>
+          </MDBModalHeader>
+          <MDBModalBody>
+            <p></p>
+            <MDBInput label="Nombre" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <p></p>
+            <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <p></p>
+            <MDBInput label="Cargo" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
+            <p></p>
+            <MDBInput label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <p></p>            
+            <MDBInput label="Confirmar contraseña" type="password" required />
+            <p></p>      
+              <div className="container_div">
+                <select className="select-custom"label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
                 <option value="" disabled>Selecciona un departamento</option>
                 {departments.map((dep) => (
-                  <option key={dep.id} value={dep.id}>{dep.name}</option>
+                  <option key={dep.id} value={dep.id}>
+                    {dep.name}
+                  </option>
                 ))}
-              </Form.Select>
-            </Form.Group>
-            <div className="d-flex justify-content-between w-100">
-            <Button variant="danger" onClick={handleCloseModalRegistro}>Cancelar</Button>
-            <Button variant="primary" type="submit">Guardar</Button>
-          </div>
-          </Form>
+              </select>
+              </div>
+          </MDBModalBody>
+          <MDBModalFooter>
+            <MDBBtn variant="danger" onClick={handleCloseModals}>
+              Cancelar
+            </MDBBtn>
+            <MDBBtn variant="primary" onClick={add}>
+              Guardar
+            </MDBBtn>
+          </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+        </MDBModal>
         
-        </Modal.Body>
-      </Modal>
-      {/*========================================================== */}
-      <Modal show={showModalEditar} onHide={handleCloseModalEditar}>
-        <Modal.Header closeButton>
-          <Modal.Title className='fw-bold mb-2 text-uppercase text-center'>Editar Usuario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Nombre Completo</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Nombre completo"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Correo</Form.Label>
-              <Form.Control
-                required
-                type="email"
-                placeholder="Correo"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="floatingInput">
-              <Form.Label>Cargo</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Cargo"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Departamento:</Form.Label>
-              <Form.Select value={id_department} onChange={(e) => setId_department(e.target.value)}>
-                <option value="" disabled>Selecciona un departamento</option>
-                {departments.map((dep) => (
-                  <option key={dep.id} value={dep.id}>{dep.name}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="d-flex justify-content-between w-100">
-            <Button variant="danger" onClick={handleCloseModalEditar}>Cancelar</Button>
-          </div>
-          <div className="d-flex justify-content-between w-100">
-            <Button variant="primary" type="submit" onClick={handleSubmit}>Guardar</Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+      
+
+        {/* Modal for editing */}
+        <MDBModal open={showModalEditar} setOpen={setShowModalEditar}tabIndex='-1'>
+        <MDBModalDialog>
+          <MDBModalContent>
+          <MDBModalHeader toggle={setShowModalEditar}>
+            <MDBModalTitle>Editar usuario</MDBModalTitle>
+            <MDBBtn className='btn-close' color='none' onClick={handleCloseModals}></MDBBtn>
+          </MDBModalHeader>
+          <MDBModalBody>
+            <p></p> 
+            <MDBInput label="Nombre Completo" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <p></p> 
+            <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <p></p> 
+            <MDBInput label="Cargo" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
+            <p></p> 
+            <div className="container_div">
+            <select className="select-custom" label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
+              <option value="" disabled>Selecciona un departamento</option>
+              {departments.map((dep) => (
+                <option key={dep.id} value={dep.id}>
+                  {dep.name}
+                </option>
+              ))}
+            </select>
+            </div>
+          </MDBModalBody>
+          <MDBModalFooter>
+            <MDBBtn variant="danger" onClick={handleCloseModals}>
+              Cancelar
+            </MDBBtn>
+            <MDBBtn variant="primary" type="submit" onClick={handleSubmit}>
+              Guardar
+            </MDBBtn>
+          </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+        </MDBModal>
+      </MDBContainer>
     </div>
   );
 }

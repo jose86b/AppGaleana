@@ -1,64 +1,64 @@
-import React, { Component } from 'react'
-import { Navbar, NavDropdown, Form, FormControl, Button, Nav } from 'react-bootstrap'
+import React, { Component } from 'react';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarToggler,
+  MDBCollapse,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBNavbarLink,
+  MDBContainer,
+} from 'mdb-react-ui-kit';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Home from './Home';
-
 import TableUs from './TableUs';
 import TableActivos from './TableActivos';
-import FormActivos from './FormActivos';
-import '../styles/Main.css'
 
 
 export default class NavbarComp extends Component {
-    render() {
-        return (
-            <Router>
-                <div>
-
-                    <Navbar bg="primary" data-bs-theme="dark" expand="lg">
-                        <Navbar.Brand href="#" className='text-center' >Municipio de Galeana</Navbar.Brand>
-                        <Navbar.Toggle aria-controls="navbarScroll" />
-                        <Navbar.Collapse id="navbarScroll">
-                            <Nav
-                                className="mr-auto my-2 my-lg-0"
-                                style={{ maxHeight: '100px' }}
-                                navbarScroll
-                            >
-                                <Nav.Link as={Link} to="/home" className='text-center'>Inicio</Nav.Link>
-                               
-                                <Nav.Link as={Link} to="/users" className='text-center'>Usuarios</Nav.Link>
-                                <Nav.Link as={Link} to="/activos" className='text-center'>Activos</Nav.Link>
-                                <Nav.Link as={Link} to="/registros" className='text-center'>Registrar</Nav.Link>
-
-                            </Nav>
-
-                        </Navbar.Collapse>
-                    </Navbar>
-                </div>
-                <div>
-                    <Switch>
-                       
-                        <Route path="/users">
-                            <TableUs />
-                        </Route>
-                        <Route path="/activos">
-                            <TableActivos />
-                        </Route>
-                        <Route path="/registros">
-                            <FormActivos />
-                        </Route>
-                        <Route path="/">
-                            <Home />
-                        </Route>
-                    </Switch>
-                </div>
-            </Router>
-        )
-    }
+  render() {
+    return (
+      <Router>
+        <div>
+          <MDBNavbar color="primary" dark expand="lg">
+            <MDBContainer fluid>
+              <MDBNavbarBrand href="#" className="text-center">
+                Municipio de Galeana
+              </MDBNavbarBrand>
+              <MDBNavbarToggler />
+              <MDBCollapse id="navbarScroll">
+                <MDBNavbarNav left className="mr-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
+                  <MDBNavbarItem active>
+                    <MDBNavbarLink to='/home' className="text-center">
+                      Inicio
+                    </MDBNavbarLink>
+                  </MDBNavbarItem>
+                  <MDBNavbarItem>
+                    <MDBNavbarLink to='/users' className="text-center">
+                      Usuarios
+                    </MDBNavbarLink>
+                  </MDBNavbarItem>
+                  <MDBNavbarItem>
+                    <MDBNavbarLink to='/activos' className="text-center">
+                      Activos
+                    </MDBNavbarLink>
+                  </MDBNavbarItem>
+                  <MDBNavbarItem>
+                    
+                  </MDBNavbarItem>
+                </MDBNavbarNav>
+              </MDBCollapse>
+            </MDBContainer>
+          </MDBNavbar>
+        </div>
+        <div>
+          <Switch>
+            <Route path="/users" Component= {TableUs}/>
+            <Route path="/activos" Component={TableActivos}/>
+            <Route exact path="/" Component={Home} />
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
