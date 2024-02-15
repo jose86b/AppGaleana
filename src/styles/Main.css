@@ -1,52 +1,29 @@
 
 /*=====================================select==========================================*/
-.select-custom {
-  border: none;
-  padding: 10px;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  color: #333;
-  background-color: #fff;
-  margin: 0 auto;
-  width: 500px;
-  height: 40px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  position: relative;
+/*===================================Navbard=====================================*/
+.text-color{
+  color: #f5f5f5;
+}
+div .btn-danger{
+  background:#ff4100;
+}
+div.btn-danger:hover {
+  background-color: #b82e00;
+}
+div .btn-primary{
+  background: #0955a0;
 }
 
-.select-custom::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid #333;
-}
-
-.select-custom:hover {
-  background-color: #f5f5f5;
-}
-
-.select-custom option {
-  padding: 10px;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  color: #333;
-  background-color: #fff;
-}
-
-.select-custom option:hover {
-  background-color: #f5f5f5;
-}
-.container_div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+nav .navbar .navbar-dark .bg-primary{
+  background:#0955a0;
 }
 /*===================================Navbard=====================================*/
-
-
-/*===================================Navbard=====================================*/
+.logo-small {
+  max-width: 80px;
+  height: auto;
+}
+.logo {
+  max-width: 80px;
+  height: auto;
+  margin-right: 10px;
+}

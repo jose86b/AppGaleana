@@ -10,12 +10,13 @@ import {
   MDBTable,
   MDBTableHead,
   MDBTableBody,
-  MDBTableRow,
+  
   MDBInput,
   MDBModalDialog,
   MDBModalContent,
 } from 'mdb-react-ui-kit';
 import Axios from 'axios';
+import '../styles/Main.css'
 
 const Depa = () => {
   const [name, setNamed] = useState('');
@@ -25,8 +26,6 @@ const Depa = () => {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const handleShowModalAdd = () => setShowModalAdd(true);
-  const handleCloseModalAdd = () => setShowModalAdd(false);
 
   
   const handleCloseModalEdit = () => {
@@ -34,7 +33,7 @@ const Depa = () => {
     limpiar();
   }
 
-  const [itemToEdit, setItemToEdit] = useState(null);
+
   const [departments, setDep] = useState([]);
 
   const handleAddModal = () => {
@@ -104,6 +103,7 @@ return (
       <MDBBtn  onClick={getDep}>Listar</MDBBtn>
       <p></p>
       </div>
+      <div style={{ height: '400px', overflowY: 'auto' }}>
       <MDBTable striped>
         <MDBTableHead>
           <tr>
@@ -119,14 +119,15 @@ return (
               <td>{val.name}</td>
               <td>
                 <div className="d-flex justify-content-around">
-                <MDBBtn color="primary" onClick={() => handleShowModalEdit(val)}>Editar</MDBBtn>
-                <MDBBtn color="danger" onClick={() => handleDelete(val.id)}>Eliminar</MDBBtn>
+                <MDBBtn className='me-1'color="primary" onClick={() => handleShowModalEdit(val)}>Editar</MDBBtn>
+                <MDBBtn className='me-1'color="danger" onClick={() => handleDelete(val.id)}>Eliminar</MDBBtn>
                 </div>
               </td>
             </tr>
           ))}
         </MDBTableBody>
       </MDBTable>
+      </div>
     </div>
     <MDBModal open={showModalAdd} setOpen={setShowModalAdd}>
     <MDBModalDialog>
@@ -139,8 +140,10 @@ return (
         <MDBInput label="Nombre del Departamento" type="text" value={name} onChange={(e) => setNamed(e.target.value)} required />
       </MDBModalBody>
       <MDBModalFooter>
+        <div className="d-grid gap-2 col-6 mx-auto">
         <MDBBtn color="danger" onClick={handleCloseModal}>Cancelar</MDBBtn>
         <MDBBtn color="primary" onClick={handleAdd}>Guardar</MDBBtn>
+        </div>
       </MDBModalFooter>
       </MDBModalContent>
       </MDBModalDialog>
@@ -158,8 +161,10 @@ return (
         <MDBInput label="Nombre del Departamento" type="text" value={name} onChange={(e) => setNamed(e.target.value)} required />
       </MDBModalBody>
       <MDBModalFooter>
+        <div className="d-grid gap-2 col-6 mx-auto">
         <MDBBtn color="danger" onClick={handleCloseModalEdit}>Cancelar</MDBBtn>
         <MDBBtn color="primary" onClick={handleEdit}>Guardar</MDBBtn>
+        </div>
       </MDBModalFooter>
       </MDBModalContent>
       </MDBModalDialog>

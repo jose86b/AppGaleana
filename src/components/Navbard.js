@@ -1,83 +1,46 @@
 import React, { useState } from 'react';
 import {
-  MDBNavbar,
   MDBContainer,
-  MDBIcon,
-  MDBNavbarNav,
-  MDBNavbarItem,
-  MDBNavbarLink,
-  MDBNavbarToggler,
+  MDBNavbar,
   MDBNavbarBrand,
+  MDBNavbarToggler,
+  MDBNavbarNav,
+  MDBNavbarLink,
+  MDBIcon,
   MDBCollapse
 } from 'mdb-react-ui-kit';
-import Home from './Home';
-import TableUs from './TableUs';
-import TableActivos from './TableActivos';
-import Depa from './Depa';
+import { Link } from 'react-router-dom';
+import '../styles/Main.css'
 
-import logoImg from './Logo.png';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+const customNavbarBg = {
+  backgroundColor: '#0955a0',
+};
 
-
-export default function Navbard() {
-  const [openNavColor, setOpenNavColor] = useState(false);
-  const [openNavColorSecond, setOpenNavColorSecond] = useState(false);
-  const [openNavColorThird, setOpenNavColorThird] = useState(false);
+export default function Navbar() {
+  const [openNavSecond, setOpenNavSecond] = useState(false);
 
   return (
-    <Router>
-      <>
-        <MDBNavbar expand='lg' dark bgColor='primary'>
-          <MDBContainer fluid>
-            <MDBNavbarBrand>Municipio De Galeana</MDBNavbarBrand>
-            <MDBNavbarToggler
-              type='button'
-              data-target='#navbarColor02'
-              aria-controls='navbarColor02'
-              aria-expanded='false'
-              aria-label='Toggle navigation'
-              onClick={() => setOpenNavColor(!openNavColor)}
-            >
-              <MDBIcon icon='bars' fas />
-            </MDBNavbarToggler>
-            <MDBCollapse open={openNavColor} navbar>
-              <MDBNavbarNav className='me-auto mb-2 mb-lg-0'>
-                <MDBNavbarItem className='active'>
-                  <MDBNavbarLink aria-current='page' to='/'>
-                    Home
-                  </MDBNavbarLink>
-                </MDBNavbarItem>
-                <MDBNavbarItem>
-                  <MDBNavbarLink to='/department'>Departamentos</MDBNavbarLink>
-                </MDBNavbarItem>
-                <MDBNavbarItem>
-                  <MDBNavbarLink to='/users'>Usuarios</MDBNavbarLink>
-                </MDBNavbarItem>
-                <MDBNavbarItem>
-                  <MDBNavbarLink to='/activos'>Activos</MDBNavbarLink>
-                </MDBNavbarItem>
-              </MDBNavbarNav>
-            </MDBCollapse>
-          </MDBContainer>
-        </MDBNavbar>
-
-        <div>
-          <Switch>
-            <Route path="/department">
-              <Depa />
-            </Route>
-            <Route path="/users">
-              <TableUs />
-            </Route>
-            <Route path="/activos">
-              <TableActivos />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </div>
-      </>
-    </Router>
+    
+    <MDBNavbar expand='lg' dark style={{backgroundColor: '#0955a0'}}>
+      <MDBContainer fluid style={customNavbarBg}>
+        <MDBNavbarBrand as={Link}to="/">Navbar</MDBNavbarBrand>
+        <MDBNavbarToggler
+          aria-expanded='false'
+          aria-label='Toggle navigation'
+          onClick={() => setOpenNavSecond(!openNavSecond)}
+        >
+          <MDBIcon icon='bars' fas />
+        </MDBNavbarToggler>
+        <MDBCollapse navbar open={openNavSecond}>
+          <MDBNavbarNav>
+            <MDBNavbarLink active aria-current='page' tag={Link}to="/">Inicio</MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link}to="/department">Departamentos</MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link}to="/users">Users</MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link}to="/activos">Activos</MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link}to="/Login">login</MDBNavbarLink>
+          </MDBNavbarNav>
+        </MDBCollapse>
+      </MDBContainer>
+    </MDBNavbar>
   );
 }
