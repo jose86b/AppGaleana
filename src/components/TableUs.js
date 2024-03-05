@@ -14,15 +14,13 @@ import {
   MDBModalDialog,
   MDBModalContent,
 } from 'mdb-react-ui-kit';
+
 import Form from 'react-bootstrap/Form';
 import Axios from 'axios';
-import bcrypt from 'bcryptjs';
-import '../styles/Main.css';
+import Navbard from './Navbard.js'
 
-function encryptPassword(password) {
-  const salt = bcrypt.genSaltSync(10);
-  return bcrypt.hashSync(password, salt);
-}
+
+import '../styles/Main.css';
 
 function TableUs() {
   const [name, setName] = useState('');
@@ -31,7 +29,7 @@ function TableUs() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [id_department, setId_department] = useState('');
-  
+
   const [users, setUs] = useState([]);
   const [id, setId] = useState();
 
@@ -41,17 +39,16 @@ function TableUs() {
   const handleShowModalRegistro = () => setShowModalRegistro(true);
   const handleCloseModalRegistro = () => setShowModalRegistro(false);
 
-
-  
+ 
 
   const add = (e) => {
     e.preventDefault();
-    const encryptedPassword = encryptPassword(password);
+    
     Axios.post('http://localhost:3001/create', {
       name: name,
       email: email,
       position: position,
-      password: encryptedPassword,
+      password: password,
       id_department: id_department,
     }).then(() => {
       alert('Usuario Registrado');
@@ -141,48 +138,46 @@ function TableUs() {
 
   return (
     <div>
+      <Navbard />
       <div>
       <MDBModal open={showModalRegistro} setOpen={setShowModalRegistro} tabIndex="-1">
-          <MDBModalDialog>
-            <MDBModalContent>
-              <MDBModalHeader toggle={handleCloseModals}>
-                <MDBModalTitle>Registro de nuevo usuario</MDBModalTitle>
-                <MDBBtn className="btn-close" color="none" onClick={handleCloseModals}></MDBBtn>
-              </MDBModalHeader>
-              <MDBModalBody>
-                <p></p>
-                <MDBInput label="Nombre" type="text" value={name} onChange={(e) => setName(e.target.value)}required/>
-                <p></p>
-                <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)}required/>
-                <p></p>
-                <MDBInput label="Cargo"type="text"value={position} onChange={(e) => setPosition(e.target.value)}required/>
-                <p></p>
-                <MDBInput label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)}required/>
-                <p></p>
-                <MDBInput label="Confirmar contraseña"type="password"value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}required/>
-                <p></p>
-                <div >
-                  <Form.Select label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required >
-                    <option value="" disabled>
-                      Selecciona un departamento
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader toggle={handleCloseModalRegistro}>
+              <MDBModalTitle>Registro de nuevo usuario</MDBModalTitle>
+              <MDBBtn className="btn-close" color="none" onClick={handleCloseModalRegistro}></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <MDBInput label="Nombre" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+              <p></p>
+              <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <p></p>
+              <MDBInput label="Cargo" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
+              <p></p>
+              <MDBInput label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <p></p>
+              <MDBInput label="Confirmar contraseña" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+              <p></p>
+              <div>
+                <Form.Select label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
+                  <option value="" disabled>Selecciona un departamento</option>
+                  {departments.map((dep) => (
+                    <option key={dep.id} value={dep.id}>
+                      {dep.name}
                     </option>
-                    {departments.map((dep) => (
-                      <option key={dep.id} value={dep.id}>
-                        {dep.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </div>
-              </MDBModalBody>
-              <MDBModalFooter>
-                <div className="d-grid gap-2 col-6 mx-auto">
-                <MDBBtn color="danger" onClick={handleCloseModals}>Cancelar</MDBBtn>
+                  ))}
+                </Form.Select>
+              </div>
+            </MDBModalBody>
+            <MDBModalFooter>
+              <div className="d-grid gap-2 col-6 mx-auto">
+                <MDBBtn color="danger" onClick={handleCloseModalRegistro}>Cancelar</MDBBtn>
                 <MDBBtn color="primary" onClick={add}>Guardar</MDBBtn>
-                </div>
-              </MDBModalFooter>
-            </MDBModalContent>
-          </MDBModalDialog>
-        </MDBModal>
+              </div>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
       </div>
       
       <MDBContainer>

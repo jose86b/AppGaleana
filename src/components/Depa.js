@@ -17,6 +17,7 @@ import {
 } from 'mdb-react-ui-kit';
 import Axios from 'axios';
 import '../styles/Main.css'
+import Navbard from './Navbard';
 
 const Depa = () => {
   const [name, setNamed] = useState('');
@@ -94,6 +95,8 @@ const Depa = () => {
   };
 
 return (
+  <div>
+  <Navbard />
   <MDBContainer>
     <div>
       <div className="d-grid gap-2 col-6 mx-auto">
@@ -170,6 +173,7 @@ return (
       </MDBModalDialog>
     </MDBModal> 
   </MDBContainer>
+  </div>
 );
 };
 

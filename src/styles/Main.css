@@ -27,3 +27,34 @@ nav .navbar .navbar-dark .bg-primary{
   height: auto;
   margin-right: 10px;
 }
+.gradient-custom-2 {
+  /* fallback for old browsers */
+  background: #0955A0;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, #0955A0, #00A8E3);
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, #0955A0, #00A8E3);
+}
+
+@media (min-width: 768px) {
+  .gradient-form {
+    height: 100vh !important;
+  }
+}
+@media (min-width: 769px) {
+  .gradient-custom-2 {
+    border-top-right-radius: .3rem;
+    border-bottom-right-radius: .3rem;
+  }
+}
+.shadow{
+  margin-top: 100px;
+  -webkit-box-shadow: 0 0 7.5px 5px #dddddd;
+  -moz-box-shadow: 0 0 7.5px 5px #dddddd;
+  box-shadow: 0 0 7.5px 5px #dddddd;
+}
+.box-color1{
+  margin-top: 20px;
+}
