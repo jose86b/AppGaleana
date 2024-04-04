@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MDBContainer,
   MDBBtn,
@@ -18,55 +18,65 @@ import {
 import Axios from 'axios';
 import '../styles/Main.css'
 import Navbard from './Navbard';
+import Swal from 'sweetalert2'
 
 const Depa = () => {
   const [name, setNamed] = useState('');
   const [id, setId] = useState('');
-
+  const [departments, setDep] = useState([]);
 
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
-
-  
   const handleCloseModalEdit = () => {
     setShowModalEdit(false); 
     limpiar();
   }
-
-
-  const [departments, setDep] = useState([]);
-
   const handleAddModal = () => {
     setShowModalAdd(true);
   };
-
   const handleCloseModal = () => {
     setShowModalAdd(false);
     limpiar();
   };
-
   const handleShowModalEdit = (val) => {
     setNamed(val.name);
     setId(val.id);
     setShowModalEdit(true);
   };
 
+
   const handleAdd = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:3001/createDepartment', { name: name }).then(() => {
-      alert('Departamento Registrado');
-      setShowModalAdd(false);
-      limpiar();
-      getDep();
-    });
+    Axios.post('http://localhost:3001/createDepartment', { name: name })
+      .then(() => {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Departamento registrado exitosamente.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setShowModalAdd(false);
+        limpiar();
+        getDep();
+      })
+      .catch((error) => {
+        console.error(error); // Manejar errores
+      });
   };
 
   const handleEdit = (e) => {
     Axios.put('http://localhost:3001/updep', { id: id, name: name })
       .then((response) => {
         getDep(); // Refresh the list
-        alert(response.data);
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Departamento actualizado exitosamente.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         setShowModalEdit(false);
         limpiar();
       })
@@ -76,24 +86,45 @@ const Depa = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("¿Está seguro de eliminar este departamento?")) {
-      Axios.delete(`http://localhost:3001/deldep/${id}`).then(() => {
-        const filteredTabla = departments.filter((user) => user.id !== id);
-        setDep(filteredTabla);
-      });
-    }
-  };
-  const getDep = () => {
-    Axios.get('http://localhost:3001/dep').then((response) => {
-      setDep(response.data);
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, bórralo!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete(`http://localhost:3001/deldep/${id}`).then(() => {
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "Departamento Elminado",
+            icon: "success"
+          });
+          const filteredTabla = departments.filter((user) => user.id !== id);
+          setDep(filteredTabla);
+        });
+      }
     });
   };
+  const getDep = async () => {
+    try{
+    const response = await Axios.get('http://localhost:3001/dep');
+    setDep(response.data)
+  } catch (error) {
+    console.error(error);
+    alert('Error al obtener los departementos');
+  }  
+  };
+   
 
   const limpiar = () => {
     setNamed('');
     setId('');
   };
 
+  useEffect(()=> {getDep();},[]);
 return (
   <div>
   <Navbard />
@@ -101,18 +132,17 @@ return (
     <div>
       <div className="d-grid gap-2 col-6 mx-auto">
       <p></p>
-      <MDBBtn color='success'onClick={handleAddModal}>Agregar nuevo Departamento</MDBBtn>
+        <MDBBtn color='success'onClick={handleAddModal}>Agregar nuevo Departamento</MDBBtn>
       <p></p>
-      <MDBBtn  onClick={getDep}>Listar</MDBBtn>
-      <p></p>
+        <p className="fs-1 text-center">REGISTRO DE DEPARTAMENTOS</p>
       </div>
-      <div style={{ height: '400px', overflowY: 'auto' }}>
+      <div style={{ height: '600px', overflowY: 'auto' }}>
       <MDBTable striped>
         <MDBTableHead>
           <tr>
             <th>#</th>
-            <th>Nombre del departamento</th>
-            <th>Acción</th>
+            <th>NOMBRE DEL DEPARTAMENTO</th>
+            <th>ACCIONES</th>
           </tr>
         </MDBTableHead>
         <MDBTableBody>

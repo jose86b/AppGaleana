@@ -21,22 +21,21 @@ import Navbard from './Navbard';
 import Swal from 'sweetalert2';
 
 import Mypdf from './Mypdf';
-import { colors, handleColorChange } from '../admin/Index.js'
+import Mypdf2 from './Mypdf2';
 
-
-function TableActivos() {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [serie, setSerie] = useState('');
-  const [location, setLocation] = useState('');
-  const [condition_a, setCondition_a] = useState('');
+function Rdav() {
+  const [numero_inventario, setNumero_inventario] = useState('');
+  const [ubicacion, setUbicacion] = useState('');
+  const [gaveta_o_anaquel, setGaveta_o_anaquel] = useState('');
+  const [titulo, setTitulo] = useState('');
+  const [contenido , setContenido ] = useState('');
   const [id, setId] = useState();
   
   
   
 
 
-  const [activos, setActivos] = useState([]);
+  const [rdav, setRdav] = useState([]);
 
   const [showModalRegistro, setShowModalRegistro] = useState(false);
   const [showModalEditar, setShowModalEditar] = useState(false);
@@ -48,13 +47,12 @@ function TableActivos() {
     e.preventDefault();
   
     try {
-      const response = await Axios.post('http://localhost:3001/createac', {
-        name: name,
-        description: description,
-        serie: serie,
-        location: location,
-        condition_a: condition_a,
-        id_users: idu,
+      const response = await Axios.post('http://localhost:3001/createRdav', {
+        numero_inventario: numero_inventario,
+        ubicacion: ubicacion,
+        gaveta_o_anaquel: gaveta_o_anaquel,
+        titulo: titulo,
+        contenido : contenido,
       });
   
       Swal.fire({
@@ -67,7 +65,7 @@ function TableActivos() {
   
       handleCloseModalRegistro(); // Close modal after success
       limpiar();
-      getActivos();
+      getRdav();
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -81,11 +79,11 @@ function TableActivos() {
   };
 
   const handleShowModalEditar = (val) => {
-    setName(val.name);
-    setDescription(val.description);
-    setSerie(val.serie);
-    setLocation(val.location);
-    setCondition_a(val.condition_a);
+    setNumero_inventario(val.numero_inventario);
+    setUbicacion(val.ubicacion);
+    setGaveta_o_anaquel(val.gaveta_o_anaquel);
+    setTitulo(val.titulo);
+    setContenido(val.contenido);
     setId(val.id);
     setShowModalEditar(true);
   };
@@ -101,29 +99,56 @@ function TableActivos() {
     limpiar();
   };
 
-  const getActivos = async () => {
+  const getRdav = async () => {
     try {
-      const response = await Axios.get('http://localhost:3001/ac');
-      setActivos(response.data);
+      const response = await Axios.get('http://localhost:3001/rdav');
+      setRdav(response.data);
     } catch (error) {
       console.error(error);
       alert('Error al obtener los activos');
     }
   };
+
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Estas seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, bórralo!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete(`http://localhost:3001/delRdav/${id}`).then(() => {
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "Registro Elminado",
+            icon: "success"
+          });
+          const filteredActivos = rdav.filter((rdav) => rdav.id !== id);
+          setRdav(filteredActivos);
+        });
+      }
+    });
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     try {
-      const response = await Axios.put('http://localhost:3001/upac', {
+      const response = await Axios.put('http://localhost:3001/upRdav', {
         id: id,
-        name: name,
-        description: description,
-        serie: serie,
-        location: location,
-        condition_a: condition_a,
+        numero_inventario: numero_inventario,
+        ubicacion: ubicacion,
+        gaveta_o_anaquel: gaveta_o_anaquel,
+        titulo: titulo,
+        contenido: contenido,
       });
   
-      getActivos(); // Update asset list
+      getRdav(); // Update asset list
   
       Swal.fire({
         title: "¡Éxito!",
@@ -147,56 +172,18 @@ function TableActivos() {
     }
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Estas seguro?",
-      text: "¡No podrás revertir esto!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "¡Sí, bórralo!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Axios.delete(`http://localhost:3001/delac/${id}`).then(() => {
-          Swal.fire({
-            title: "¡Eliminado!",
-            text: "Registro Elminado",
-            icon: "success"
-          });
-          const filteredActivos = activos.filter((activos) => activos.id !== id);
-          setActivos(filteredActivos);
-        });
-      }
-    });
-  };
-
-  const [idu, setIdu] = useState('');
-
-  useEffect(() => {
-    Axios.get('http://localhost:3001')
-      .then(res => {
-        if (res.data.Status === 'Success') {
-          setIdu(res.data.idu);
-        }
-      })
-      .catch(err => console.error(err));
-  }, []);
-
- 
-
   const limpiar = () => {
-    setName('');
-    setDescription('');
-    setSerie('');
-    setLocation('');
-    setCondition_a('');
-    setId('');
+    setNumero_inventario('');
+    setUbicacion('');
+    setGaveta_o_anaquel('');
+    setTitulo('');
+    setContenido('');
+
   };
  
 
   useEffect(() => {
-    getActivos();
+    getRdav();
   }, []); // Call getUsers on component mount
 
   
@@ -211,19 +198,19 @@ function TableActivos() {
           <MDBModalDialog>
             <MDBModalContent>
               <MDBModalHeader toggle={handleCloseModals}>
-                <MDBModalTitle>AGREGAR NUEVO ACTIVO</MDBModalTitle>
+                <MDBModalTitle>AGREGAR NUEVO REGISTRO</MDBModalTitle>
                 <MDBBtn className="btn-close" color="none" onClick={handleCloseModals}></MDBBtn>
               </MDBModalHeader>
               <MDBModalBody>
-                <MDBInput label="NOMBRE" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+                <MDBInput label="NUMERO DE INVENTARIO" type="text" value={numero_inventario} onChange={(e) => setNumero_inventario(e.target.value)} required />
                 <p></p>
-                <MDBInput label="DESCRIPCIÓN" type="text" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                <MDBInput label="UBICACIÓN" type="text" value={ubicacion} onChange={(e) => setUbicacion(e.target.value)} required />
                 <p></p>
-                <MDBInput label="SERIE" type="text" value={serie} onChange={(e) => setSerie(e.target.value)} required />
+                <MDBInput label="GAVETA O ANAQUEL" type="text" value={gaveta_o_anaquel} onChange={(e) => setGaveta_o_anaquel(e.target.value)} required />
                 <p></p>
-                <MDBInput label="UBICACIÓN" type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+                <MDBInput label="TITULO" type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
                 <p></p>
-                <MDBInput label="CONDICIÓN" type="text" value={condition_a} onChange={(e) => setCondition_a(e.target.value)} required />
+                <MDBInput label="CONTENIDO" type="text" value={contenido} onChange={(e) => setContenido(e.target.value)} required />
                 <p></p>
               </MDBModalBody>
               <MDBModalFooter>
@@ -240,34 +227,33 @@ function TableActivos() {
       <MDBContainer>
         <div className="d-grid gap-2 col-6 mx-auto">
           <p></p>
-          <MDBBtn color="success" onClick={handleShowModalRegistro}>REGISTRAR NUEVO ACTIVO</MDBBtn>
+          <MDBBtn color="success" onClick={handleShowModalRegistro}>REGISTRO NUEVO</MDBBtn>
           <p></p>
-          <p className="fs-1 text-center">REGISTRO DE ACTIVOS</p>
+          <p className="fs-1 text-center">RELACIÓN DE ARCHIVOS VIGENTES</p>
         </div>
-        <div style={{ height: '600px', overflowY: 'auto' }}>
+        <div style={{ height: '550px', overflowY: 'auto' }}>
           <MDBTable striped>
             <MDBTableHead>
+              
               <tr>
                 <th>#</th>
-                <th>NOMBRE</th>
-                <th>DESCRIPCIÓN</th>
-                <th>SERIE</th>
+                <th>NUMERO DE INVENTARIO</th>
                 <th>UBICACIÓN</th>
-                <th>CONDICIÓN</th>
-                <th>USUARIO</th>
+                <th>GAVETA O ANAQUEL</th>
+                <th>TITULO</th>
+                <th>CONTENIDO</th>
                 <th>ACCIONES</th>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
-              {activos.map((val) => (
+              {rdav.map((val) => (
                 <tr key={val.id}>
                   <td>{val.id}</td>
-                  <td>{val.name}</td>
-                  <td>{val.description}</td>
-                  <td>{val.serie}</td>
-                  <td>{val.location}</td>
-                  <td>{val.condition_a}</td>
-                  <td>{val.nombre}</td>
+                  <td>{val.numero_inventario}</td>
+                  <td>{val.ubicacion}</td>
+                  <td>{val.gaveta_o_anaquel}</td>
+                  <td>{val.titulo}</td>
+                  <td>{val.contenido}</td>
                   <td>
                     <div className="d-flex justify-content-around">
                       <MDBBtn className='me-1' onClick={() => handleShowModalEditar(val)}>Editar</MDBBtn>
@@ -285,20 +271,19 @@ function TableActivos() {
           <MDBModalDialog>
             <MDBModalContent>
               <MDBModalHeader toggle={handleCloseModals}>
-                <MDBModalTitle>EDITAR ACTIVO</MDBModalTitle>
+                <MDBModalTitle>EDITAR REGISTRO</MDBModalTitle>
                 <MDBBtn className="btn-close" color="none" onClick={handleCloseModals}></MDBBtn>
               </MDBModalHeader>
               <MDBModalBody>
-                <MDBInput 
-                label="NOMBRE" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+                <MDBInput label="NUMERO DE INVENTARIO" type="text" value={numero_inventario} onChange={(e) => setNumero_inventario(e.target.value)} required />
                 <p></p>
-                <MDBInput label="DESCRIPCIÓN" type="text" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                <MDBInput label="UBICACIÓN" type="text" value={ubicacion} onChange={(e) => setUbicacion(e.target.value)} required />
                 <p></p>
-                <MDBInput label="SERIE" type="text" value={serie} onChange={(e) => setSerie(e.target.value)} required />
+                <MDBInput label="GAVETA O ANAQUEL" type="text" value={gaveta_o_anaquel} onChange={(e) => setGaveta_o_anaquel(e.target.value)} required />
                 <p></p>
-                <MDBInput label="UBICACIÓN" type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+                <MDBInput label="TITULO" type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
                 <p></p>
-                <MDBInput label="CONDICIÓN" type="text" value={condition_a} onChange={(e) => setCondition_a(e.target.value)} required />
+                <MDBInput label="CONTENIDO" type="text" value={contenido} onChange={(e) => setContenido(e.target.value)} required />
                 <p></p>
               </MDBModalBody>
               <MDBModalFooter>
@@ -313,13 +298,12 @@ function TableActivos() {
       </MDBContainer>
       <div className="d-grid gap-2 col-6 mx-auto">
       <p></p>
-        <Mypdf />
-        <p></p>
+        <Mypdf2 />
       </div>
     </div>
   );
 }
 
-export default TableActivos;
+export default Rdav;
   
 

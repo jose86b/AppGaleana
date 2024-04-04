@@ -4,13 +4,18 @@ import Navbard from './components/Navbard.js';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import Home from './components/Home.js';
+
 import Depa from './components/Depa.js';
 import TableUs from './components/TableUs.js';
 import TableActivos from './components/TableActivos.js';
 import Login from './components/Login.js';
+import Home from './components/Home.js';
 
 import axios from 'axios';
+import Opap from './components/Opap.js';
+import Rdav from './components/Rdav.js';
+import Index from './admin/Index.js';
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -69,53 +74,19 @@ function App() {
       <Routes>
         {/* Ruta inicial: Login */}
         <Route path="/" element={<Login />} />
-
         {/* Renderizado condicional del Navbard basado en el estado de la sesión */}
-        <Route
-          path="/navbard"
-          element={
-            isLoggedIn ? (
-              <Navbard name={{name, email, position}} handleLogout={handleLogout} />
-            ) : (
-              <Navigate to="/" replace /> // Redirigir al login si no está autenticado
-            )
-          }
-        />
-
+        <Route path="/navbard" element={ isLoggedIn ? ( <Navbard name={{name, email, position}} handleLogout={handleLogout} /> ) : (<Navigate to="/" replace /> )}/>
         {/* Rutas protegidas accesibles solo después de iniciar sesión correctamente */}
-        <Route
-          path="/department"
-          element={
-            isLoggedIn ? (
-              <Depa />
-            ) : (
-              <Navigate to="/" replace /> // Redirigir al login si no está autenticado
-            )
-          }
-        />
-        <Route
-          path="/users"
-          element={
-            isLoggedIn ? (
-              <TableUs />
-            ) : (
-              <Navigate to="/" replace /> // Redirigir al login si no está autenticado
-            )
-          }
-        />
-        <Route
-          path="/activos"
-          element={
-            isLoggedIn ? (
-              <TableActivos />
-            ) : (
-              <Navigate to="/" replace /> // Redirigir al login si no está autenticado
-            )
-          }
-        />
+        <Route path="/department" element={ isLoggedIn ? ( <Depa /> ) : (<Navigate to="/" replace /> )}/>
+        <Route path="/users" element={ isLoggedIn ? ( <TableUs /> ) : ( <Navigate to="/" replace /> )}/>
+        <Route path="/activos" element={ isLoggedIn ? ( <TableActivos /> ) : ( <Navigate to="/" replace /> )}/>
+        <Route path="/Acciones_en_Proceso" element={ isLoggedIn ? ( <Opap />) : (<Navigate to="/" replace /> )}/>
+        <Route path="/Relacion_de_archivos_vigentes" element={ isLoggedIn ? ( <Rdav /> ) : ( <Navigate to="/" replace /> )}/>
 
+
+        <Route path="/admin" element={ isLoggedIn ? ( <Index /> ) : ( <Navigate to="/" replace /> )}/>
         {/* Ruta de inicio, accesible independientemente del estado de la sesión */}
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={ isLoggedIn ? ( <Home /> ) : ( <Navigate to="/" replace /> )}/>
       </Routes>
     </BrowserRouter>
   );

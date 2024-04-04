@@ -28,7 +28,7 @@ function Login() {
         if (res.data.Status === 'Success') {
           // Use your authentication mechanism to set state in App.js
           const storedLoginStatus = localStorage.setItem('isLoggedIn', 'true');
-          navigate('/navbard'); // Redirect to navbar if successful
+          navigate('/home'); // Redirect to navbar if successful
         } else {
           alert(res.data.Error);
         }

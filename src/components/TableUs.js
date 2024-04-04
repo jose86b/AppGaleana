@@ -19,6 +19,8 @@ import Form from 'react-bootstrap/Form';
 import Axios from 'axios';
 import Navbard from './Navbard.js'
 
+import Swal from 'sweetalert2'
+
 
 import '../styles/Main.css';
 
@@ -31,7 +33,7 @@ function TableUs() {
   const [id_department, setId_department] = useState('');
 
   const [users, setUs] = useState([]);
-  const [id, setId] = useState();
+  const [idu, setIdu] = useState();
 
   const [showModalRegistro, setShowModalRegistro] = useState(false);
   const [showModalEditar, setShowModalEditar] = useState(false);
@@ -41,21 +43,6 @@ function TableUs() {
 
  
 
-  const add = (e) => {
-    e.preventDefault();
-    
-    Axios.post('http://localhost:3001/create', {
-      name: name,
-      email: email,
-      position: position,
-      password: password,
-      id_department: id_department,
-    }).then(() => {
-      alert('Usuario Registrado');
-      handleCloseModalRegistro();
-      limpiar();
-    });
-  };
   
 
   const handleShowModalEditar = (val) => {
@@ -63,7 +50,7 @@ function TableUs() {
     setEmail(val.email);
     setPosition(val.position);
     setPassword(val.password);
-    setId(val.id);
+    setIdu(val.idu);
     setShowModalEditar(true);
   };
 
@@ -78,37 +65,92 @@ function TableUs() {
     limpiar();
   };
 
-  const getUs = () => {
-    Axios.get('http://localhost:3001/us').then((response) => {
-      setUs(response.data);
-    });
+  const add = (e) => {
+    e.preventDefault();
+  
+    Axios.post('http://localhost:3001/create', {
+      name: name,
+      email: email,
+      position: position,
+      password: password,
+      id_department: id_department,
+    })
+      .then(() => {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Usuario registrado exitosamente.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        handleCloseModalRegistro(); // Close modal after success
+        limpiar();
+        validatePasswords();
+      })
+      .catch((error) => {
+        console.error(error); // Handle errors
+      });
+  };
+  
+  const getUs = async () => {
+    try{
+      const response = await Axios.get('http://localhost:3001/us');
+      setUs(response.data)
+    } catch (error) {
+      console.error(error);
+      alert('Error al obtener los Usuarios');
+    }  
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (idu) => {
     // Add confirmation alert
-    if (window.confirm('¿Está seguro de eliminar este usuario?')) {
-      Axios.delete(`http://localhost:3001/delete/${id}`).then(() => {
-        const filteredTabla = users.filter((user) => user.id !== id);
-        setUs(filteredTabla);
-      });
-    }
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, elimínalo!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Axios.delete(`http://localhost:3001/delete/${idu}`).then(() => {
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "Usuario Elminado",
+            icon: "success"
+          });
+          const filteredTabla = users.filter((user) => user.idu !== idu);
+          setUs(filteredTabla);
+        });
+      }
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     Axios.put('http://localhost:3001/update', {
-      id: id,
+      idu: idu,
       name: name,
       email: email,
       position: position,
       id_department: id_department,
-    }).then((response) => {
-      getUs();
-          alert(response.data);
-      handleCloseModalEditar(); // Close modal after success
-      limpiar();
-      validatePasswords();
-    });
+    })
+      .then((response) => {
+        getUs(); // Update user list
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Usuario actualizado exitosamente.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        handleCloseModalEditar(); // Close modal after success
+        limpiar();
+      })
+      .catch((error) => {
+        console.error(error); // Handle errors
+      });
   };
 
   const limpiar = () => {
@@ -117,7 +159,7 @@ function TableUs() {
     setName('');
     setEmail('');
     setPosition('');
-    setId('');
+    setIdu('');
   };
 
   const [departments, setDepartamentos] = useState([]);
@@ -135,6 +177,9 @@ function TableUs() {
     return true; // Allow form submission if
 
   };
+  useEffect(() =>{
+    getUs();
+  }, []);
 
   return (
     <div>
@@ -144,23 +189,23 @@ function TableUs() {
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader toggle={handleCloseModalRegistro}>
-              <MDBModalTitle>Registro de nuevo usuario</MDBModalTitle>
+              <MDBModalTitle>REGISTRO DE NUEVO USUARIO</MDBModalTitle>
               <MDBBtn className="btn-close" color="none" onClick={handleCloseModalRegistro}></MDBBtn>
             </MDBModalHeader>
             <MDBModalBody>
-              <MDBInput label="Nombre" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+              <MDBInput label="NOMBRE" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
               <p></p>
-              <MDBInput label="Correo" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <MDBInput label="CORREO ELECTRONICO" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
               <p></p>
-              <MDBInput label="Cargo" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
+              <MDBInput label="CARGO" type="text" value={position} onChange={(e) => setPosition(e.target.value)} required />
               <p></p>
-              <MDBInput label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <MDBInput label="CONTRASEÑA" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
               <p></p>
-              <MDBInput label="Confirmar contraseña" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+              <MDBInput label="COMFIRMAR CONTRASEÑA" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               <p></p>
               <div>
-                <Form.Select label="Departamento:" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
-                  <option value="" disabled>Selecciona un departamento</option>
+                <Form.Select label="DEPARTAMENTO" value={id_department} onChange={(e) => setId_department(e.target.value)} required>
+                  <option value="" disabled>SELECCIONA UN DEPARTAMENTO</option>
                   {departments.map((dep) => (
                     <option key={dep.id} value={dep.id}>
                       {dep.name}
@@ -171,8 +216,8 @@ function TableUs() {
             </MDBModalBody>
             <MDBModalFooter>
               <div className="d-grid gap-2 col-6 mx-auto">
-                <MDBBtn color="danger" onClick={handleCloseModalRegistro}>Cancelar</MDBBtn>
-                <MDBBtn color="primary" onClick={add}>Guardar</MDBBtn>
+                <MDBBtn color="danger" onClick={handleCloseModalRegistro}>CANCELAR</MDBBtn>
+                <MDBBtn color="primary" onClick={add}>GUARDAR</MDBBtn>
               </div>
             </MDBModalFooter>
           </MDBModalContent>
@@ -183,31 +228,26 @@ function TableUs() {
       <MDBContainer>
         <div className="d-grid gap-2 col-6 mx-auto">
           <p></p>
-          <MDBBtn color="success" onClick={handleShowModalRegistro}>
-            Registrar
-          </MDBBtn>
+          <MDBBtn color="success" onClick={handleShowModalRegistro}>REGISTRAR NUEVO USUARIO</MDBBtn>
           <p></p>
-          <MDBBtn color="primary" onClick={getUs}>
-            Obtener Usuarios
-          </MDBBtn>
-          <p></p>
+          <p className="fs-1 text-center">REGISTRO DE USUARIOS</p>
         </div>
-        <div style={{ height: '400px', overflowY: 'auto' }}>
+        <div style={{ height: '600px', overflowY: 'auto' }}>
         <MDBTable striped>
           <MDBTableHead>
             <tr>
               <th>#</th>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Cargo</th>
-              <th>Departamento</th>
-              <th>Acciones</th>
+              <th>NOMBRE</th>
+              <th>CORREO ELECTRONICO</th>
+              <th>CARGO</th>
+              <th>DEPARTAMENTO</th>
+              <th>ACCIONES</th>
             </tr>
           </MDBTableHead>
           <MDBTableBody>
             {users.map((val) => (
-              <tr key={val.id}>
-                <td>{val.id}</td>
+              <tr key={val.idu}>
+                <td>{val.idu}</td>
                 <td>{val.name}</td>
                 <td>{val.email}</td>
                 <td>{val.position}</td>
@@ -215,7 +255,7 @@ function TableUs() {
                 <td>
                   <div className="d-flex justify-content-around">
                     <MDBBtn className='me-1' onClick={() => handleShowModalEditar(val)}>Editar</MDBBtn>
-                    <MDBBtn className='me-1' color="danger" onClick={() => handleDelete(val.id)}>Eliminar</MDBBtn>
+                    <MDBBtn className='me-1' color="danger" onClick={() => handleDelete(val.idu)}>Eliminar</MDBBtn>
                   </div>
                 </td>
               </tr>
@@ -227,13 +267,13 @@ function TableUs() {
         <MDBModalDialog>
             <MDBModalContent>
               <MDBModalHeader toggle={handleCloseModals}>
-                <MDBModalTitle>Editar usuario</MDBModalTitle>
+                <MDBModalTitle>EDITAR USUARIO</MDBModalTitle>
                 <MDBBtn className="btn-close" color="none" onClick={handleCloseModals}></MDBBtn>
               </MDBModalHeader>
               <MDBModalBody>
                 <p></p>
                 <MDBInput
-                  label="Nombre Completo"
+                  label="NOMBRE COMPLETO"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -241,7 +281,7 @@ function TableUs() {
                 />
                 <p></p>
                 <MDBInput
-                  label="Correo"
+                  label="COREO ELECTRONICO"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -249,7 +289,7 @@ function TableUs() {
                 />
                 <p></p>
                 <MDBInput
-                  label="Cargo"
+                  label="CARGO"
                   type="text"
                   value={position}
                   onChange={(e) => setPosition(e.target.value)}
@@ -259,13 +299,13 @@ function TableUs() {
                 <div >
                   <Form.Select
                     
-                    label="Departamento:"
+                    label="DEPARTAMENTO"
                     value={id_department}
                     onChange={(e) => setId_department(e.target.value)}
                     required
                   >
                     <option value="" disabled>
-                      Selecciona un departamento
+                      SELECCIONE UN DEPARTAMENTO
                     </option>
                     {departments.map((dep) => (
                       <option key={dep.id} value={dep.id}>
@@ -277,8 +317,8 @@ function TableUs() {
               </MDBModalBody>
               <MDBModalFooter>
                 <div className="d-grid gap-2 col-6 mx-auto">
-                <MDBBtn color="danger" onClick={handleCloseModals}>Cancelar</MDBBtn>
-                <MDBBtn color="primary" type="submit" onClick={handleSubmit}>Guardar</MDBBtn>
+                <MDBBtn color="danger" onClick={handleCloseModals}>CANCELAR</MDBBtn>
+                <MDBBtn color="primary" type="submit" onClick={handleSubmit}>GUARDAR</MDBBtn>
                 </div>
               </MDBModalFooter>
             </MDBModalContent>

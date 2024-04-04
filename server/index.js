@@ -157,9 +157,9 @@ app.get('/us', (req,res)=>{
     })
 })
 app.delete('/delete/:idu', (req, res) => {
-    const id = req.params.idu;
+    const idu = req.params.idu;
   
-    db.query(`DELETE FROM users WHERE idu = ?`, [id], (err, result) => {
+    db.query(`DELETE FROM users WHERE idu = ?`, [idu], (err, result) => {
       if (err) {
         console.log(err);
         res.status(500).send('Error al eliminar registro');
@@ -173,7 +173,7 @@ app.delete('/delete/:idu', (req, res) => {
     })
   })
   app.put('/update',(req,res)=>{
-    const id=req.body.id;
+    const idu=req.body.idu;
     const name=req.body.name;
     const email=req.body.email;
     const position=req.body.position;
@@ -315,11 +315,185 @@ app.delete('/delac/:id', async (req, res) => {
   }
 });
 app.get('/ac', (req,res)=>{
-  db.query('SELECT * FROM activos', (err,result)=>{
+  db.query('SELECT activos.id, activos.name, activos.description, activos.serie, activos.location, activos.condition_a, users.id_department, users.name AS nombre, departments.name AS departamento FROM activos INNER JOIN users ON activos.Id_users = users.idu INNER JOIN departments ON users.id_department = departments.id', (err,result)=>{
       if(err){
           console.log(err);
       }else{
           res.send(result);
       }
   })
-})
+});
+
+
+
+app.post('/createDepartment', (req, res) => {
+  const name = req.body.name;
+
+  db.query('INSERT INTO departments(name) VALUES(?)', [name], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al registrar departamento');
+    } else {
+      res.send('Departamento registrado exitosamente');
+    }
+  });
+});
+
+app.put('/updep',(req,res)=>{
+  const id=req.body.id;
+  const name=req.body.name;
+  db.query('UPDATE departments SET name=? WHERE id=?',[name,id], (err,result)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      res.send('Departemanto Acutalizado')
+    }
+  })
+});
+app.delete('/deldep/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query(`DELETE FROM departments WHERE id = ?`, [id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al eliminar registro');
+    } else {
+      if (result.affectedRows > 0) {
+        res.send('Registro eliminado exitosamente');
+      } else {
+        res.status(404).send('Registro no encontrado');
+      }
+    }
+  })
+});
+
+
+app.get('/dep', (req, res) => {
+  db.query('SELECT * FROM departments', (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al obtener departamentos');
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+
+app.post('/createRdav', (req, res) => {
+  const { numero_inventario, ubicacion, gaveta_o_anaquel, titulo, contenido} = req.body;
+
+  db.query(
+    'INSERT INTO rdav (numero_inventario, ubicacion, gaveta_o_anaquel, titulo, contenido) VALUES (?, ?, ?, ?, ?)',
+    [numero_inventario, ubicacion, gaveta_o_anaquel, titulo, contenido],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error al registrar elemento');
+      } else {
+        res.send('Elemento registrado exitosamente');
+      }
+    }
+  );
+});
+app.put('/upRdav', (req, res) => {
+  const { id, numero_inventario, ubicacion, gaveta_o_anaquel, titulo, contenido } = req.body;
+
+  db.query(
+    'UPDATE rdav SET numero_inventario = ?, ubicacion = ?, gaveta_o_anaquel = ?, titulo = ?, contenido = ? WHERE id = ?',
+    [numero_inventario, ubicacion, gaveta_o_anaquel, titulo, contenido, id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error al actualizar elemento');
+      } else {
+        res.send('Elemento actualizado exitosamente');
+      }
+    }
+  );
+});
+app.delete('/delRdav/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query('DELETE FROM rdav WHERE id = ?', [id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al eliminar registro');
+    } else {
+      if (result.affectedRows > 0) {
+        res.send('Registro eliminado exitosamente');
+      } else {
+        res.status(404).send('Registro no encontrado');
+      }
+    }
+  });
+});
+app.get('/rdav', (req, res) => {
+  db.query('SELECT * FROM rdav', (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al obtener elementos');
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.post('/createOpap', (req, res) => {
+  const { nombre_obra, numero_obra, oficio_aprobacion, cobertura, federal, estatal, beneficiario, municipal, otros, fisco, financiero, } = req.body;
+  db.query( `INSERT INTO opap ( nombre_obra, numero_obra, oficio_aprobacion, cobertura, federal, estatal, beneficiario, municipal, otros, fisco, financiero ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [ nombre_obra, numero_obra, oficio_aprobacion, cobertura, federal, estatal, beneficiario, municipal, otros, fisco, financiero, ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error al registrar obra');
+      } else {
+        res.send('Obra registrada exitosamente');
+      }
+    }
+  );
+});
+
+app.put('/updateOpap', (req, res) => {
+  const { id, nombre_obra, numero_obra, oficio_aprobacion, cobertura, federal, estatal, beneficiario, municipal, otros, fisco, financiero, } = req.body;
+  db.query( `UPDATE opap SET nombre_obra = ?, numero_obra = ?, oficio_aprobacion = ?, cobertura = ?, federal = ?, estatal = ?, beneficiario = ?, municipal = ?, otros = ?, fisco = ?, financiero = ? WHERE id = ?`,
+    [ nombre_obra, numero_obra, oficio_aprobacion, cobertura, federal, estatal, beneficiario, municipal, otros, fisco, financiero, id, ],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('Error al actualizar obra');
+      } else {
+        res.send('Obra actualizada exitosamente');
+      }
+    }
+  );
+});
+
+app.delete('/deleteOpap/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query('DELETE FROM opap WHERE id = ?', [id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al eliminar obra');
+    } else {
+      if (result.affectedRows > 0) {
+        res.send('Obra eliminada exitosamente');
+      } else {
+        res.status(404).send('Obra no encontrada');
+      }
+    }
+  });
+});
+
+app.get('/opap', (req, res) => {
+  db.query('SELECT * FROM opap', (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error al obtener obras');
+    } else {
+      res.send(result);
+    }
+  });
+});

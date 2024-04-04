@@ -58,3 +58,38 @@ nav .navbar .navbar-dark .bg-primary{
 .box-color1{
   margin-top: 20px;
 }
+.tableS{
+  margin-top: 400px;
+}
+.table-container {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 150px); 
+}
+
+.card-container {
+  margin: 0 auto; /* Center horizontally in all views */
+}
+
+.picker-container {
+  display: flex;
+  justify-content: center; /* Center Picker component horizontally */
+}
+
+/* Media query for responsive centering in mobile view */
+@media (max-width: 768px) {
+  .card-container {
+    margin: 1rem auto; /* Adjust margin for mobile spacing */
+  }
+}
+.color-button {
+  width: 100%;
+  text-align: center;
+}
+
+.card-container .card-footer {
+  display: flex;
+  justify-content: center;
+}

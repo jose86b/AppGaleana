@@ -71,7 +71,9 @@ export default function Navbard() {
   return (
     <MDBNavbar expand='lg' dark style={{ backgroundColor: '#0955a0' }}>
       <MDBContainer fluid style={customNavbarBg}>
-        <img src={logo2}style={{width: '100px'}} alt="logo"></img>
+        <MDBNavbarBrand tag={Link} to="/home">
+          <img src={logo2} style={{ width: '100px' }} alt="logo" />
+        </MDBNavbarBrand>
         <MDBNavbarToggler
           aria-expanded='false'
           aria-label='Toggle navigation'
@@ -81,47 +83,25 @@ export default function Navbard() {
         </MDBNavbarToggler>
         <MDBCollapse navbar open={openNavSecond}>
           <MDBNavbarNav>
-            
-            <MDBNavbarLink
-              active
-              aria-current='page'
-              tag={Link}
-              to="/department"
-              disabled={!auth} // Disable link if not authenticated
-            >
-              Departamentos
-            </MDBNavbarLink>
-            <MDBNavbarLink
-              active
-              aria-current='page'
-              tag={Link}
-              to="/users"
-              disabled={!auth} // Disable link if not authenticated
-            >
-              Usuarios
-            </MDBNavbarLink>
-            <MDBNavbarLink
-              active
-              aria-current='page'
-              tag={Link}
-              to="/activos"
-              disabled={!auth} // Disable link if not authenticated
-            >
-              Activos
-            </MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link} to="/department" disabled={!auth}> Departamentos </MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link} to="/users" disabled={!auth}> Usuarios </MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link} to="/activos" disabled={!auth}> Activos </MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link} to="/Acciones_en_Proceso" disabled={!auth} > Acciones en Proceso </MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link} to="/Relacion_de_archivos_vigentes" disabled={!auth} > Relacion de archivos vigentes </MDBNavbarLink>
+            <MDBNavbarLink active aria-current='page' tag={Link} to="/admin" disabled={!auth} > Panel Adminstrativo </MDBNavbarLink>
           </MDBNavbarNav>
           <div>
             {auth ? (
               <>
                 <h3>
-                  <MDBBtn size="sm" color='success' onClick={toggleOpen}>Perfil De Usuariuo</MDBBtn> {/* Use toggleOpen here */}
+                  <MDBBtn size="sm" color='success' onClick={toggleOpen}>Perfil De Usuariuo</MDBBtn>
                 </h3>
                 
               </>
             ) : (
               <h3>
                 Ingresar ahora
-                <Link to="/login">Login</Link>
+                <MDBBtn to="/login">Login</MDBBtn>
               </h3>
             )}
           </div>
@@ -129,7 +109,7 @@ export default function Navbard() {
       </MDBContainer>
       
       {/* Perfil Modal */}
-      <MDBModal open={basicModal} setOpen={setBasicModal} tabIndex='-1'> {/* Use framework conventions */}
+      <MDBModal open={basicModal} setOpen={setBasicModal} tabIndex='-1'> 
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader>
